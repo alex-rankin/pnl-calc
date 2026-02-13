@@ -92,22 +92,23 @@ export const feeds: FeedDefinition[] = [
   },
 
   // Australian & New Zealand Sources
-  {
-    id: "news-au-finance",
-    name: "News.com.au Finance",
-    url: "https://www.news.com.au/content-feeds/latest-news-finance/",
-    leaning: "center",
-    industries: ["finance", "markets"],
-    regions: ["AU"],
-  },
-  {
-    id: "news-au-world",
-    name: "News.com.au World",
-    url: "https://www.news.com.au/content-feeds/latest-news-world/",
-    leaning: "center",
-    industries: ["finance", "markets", "world"],
-    regions: ["AU", "WORLD"],
-  },
+  // Does not supply a published date for each article
+  // {
+  //   id: "news-au-finance",
+  //   name: "News.com.au Finance",
+  //   url: "https://www.news.com.au/content-feeds/latest-news-finance/",
+  //   leaning: "center",
+  //   industries: ["finance", "markets"],
+  //   regions: ["AU"],
+  // },
+  // {
+  //   id: "news-au-world",
+  //   name: "News.com.au World",
+  //   url: "https://www.news.com.au/content-feeds/latest-news-world/",
+  //   leaning: "center",
+  //   industries: ["finance", "markets", "world"],
+  //   regions: ["AU", "WORLD"],
+  // },
   {
     id: "nz-herald-business",
     name: "NZ Herald Business",
@@ -126,14 +127,15 @@ export const feeds: FeedDefinition[] = [
     industries: ["tech"],
     regions: ["US"],
   },
-  {
-    id: "news-au-tech",
-    name: "News.com.au Technology",
-    url: "https://www.news.com.au/content-feeds/latest-news-technology/",
-    leaning: "center",
-    industries: ["tech"],
-    regions: ["AU"],
-  },
+  // Does not supply a published date for each article
+  // {
+  //   id: "news-au-tech",
+  //   name: "News.com.au Technology",
+  //   url: "https://www.news.com.au/content-feeds/latest-news-technology/",
+  //   leaning: "center",
+  //   industries: ["tech"],
+  //   regions: ["AU"],
+  // },
 
   // Additional Financial Sources
   {

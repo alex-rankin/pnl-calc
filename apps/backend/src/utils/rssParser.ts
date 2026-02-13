@@ -1,5 +1,5 @@
 import Parser from "rss-parser";
-import type { NewsArticle, FeedResponse } from "../types.js";
+import type { FeedResponse, NewsArticle } from "../types.js";
 
 const parser = new Parser({
   customFields: {
@@ -34,7 +34,6 @@ function truncateSummary(summary: string | null | undefined): string | null {
 function normalizeArticle(
   item: Parser.Item,
   feedTitle: string,
-  feedLink: string | undefined,
   feedUrl: string,
 ): NewsArticle {
   // Type assertion for extended item properties
