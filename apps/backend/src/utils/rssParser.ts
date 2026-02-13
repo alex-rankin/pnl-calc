@@ -3,7 +3,19 @@ import type { NewsArticle, FeedResponse } from "../types.js";
 
 const parser = new Parser({
   customFields: {
-    item: ["media:content", "media:thumbnail", "content:encoded"],
+    item: [
+      "media:content",
+      "media:thumbnail",
+      "content:encoded",
+      "metadata:type",
+      "metadata:id",
+      "metadata:sponsored",
+    ],
+  },
+  headers: {
+    "User-Agent":
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    Accept: "application/rss+xml, application/xml, text/xml, */*",
   },
 });
 
@@ -48,7 +60,7 @@ function normalizeArticle(
     summary: truncateSummary(summary),
     guid: item.guid || extendedItem.id || item.link || null,
     sourceName: feedTitle || "Unknown Source",
-    sourceUrl: feedLink || feedUrl,
+    sourceUrl: feedUrl, // Always use the RSS feed URL for matching feed definitions
   };
 }
 

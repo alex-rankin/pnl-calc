@@ -148,7 +148,10 @@ export function useFilteredNews(filters: NewsFilters) {
     // Source filter
     if (filters.sources && filters.sources.length > 0) {
       const sources = filters.sources;
-      result = result.filter((article) => sources.includes(article.sourceName));
+      result = result.filter((article) => {
+        const feed = feeds.find((f) => f.url === article.sourceUrl);
+        return feed && sources.includes(feed.name);
+      });
     }
 
     // Leaning filter

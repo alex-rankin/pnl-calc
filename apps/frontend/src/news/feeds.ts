@@ -202,12 +202,4 @@ export const feeds: FeedDefinition[] = [
     industries: ["finance", "markets", "tech", "politics", "world"],
     regions: ["US", "WORLD"],
   },
-  {
-    id: "economist",
-    name: "The Economist",
-    url: "https://www.economist.com/rss",
-    leaning: "center",
-    industries: ["finance", "markets", "tech", "politics", "world"],
-    regions: ["US", "EU", "UK", "WORLD"],
-  },
 ];
