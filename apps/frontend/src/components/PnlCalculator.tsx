@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Info, RefreshCcw } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import type { Resolver } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -162,7 +163,8 @@ export function PnlCalculator() {
     stored.sizeMode === "units" ? "notional" : (stored.sizeMode ?? "notional");
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    // Zod v4: @hookform/resolvers typings target Zod 3; runtime works with Zod 4
+    resolver: zodResolver(formSchema as unknown as Parameters<typeof zodResolver>[0]) as unknown as Resolver<FormValues>,
     mode: "onChange",
     defaultValues: {
       direction: stored.direction ?? "long",
@@ -239,12 +241,15 @@ export function PnlCalculator() {
   }, [watched.direction, watched.entry, watched.stop, watched.takeProfit]);
 
   const summary = useMemo(() => {
-    const required =
-      watched.entry &&
-      watched.stop &&
-      watched.takeProfit &&
-      (watched.sizeMode === "units" ? watched.units : watched.notional);
-    if (!required) {
+    const entry = watched.entry;
+    const stop = watched.stop;
+    const takeProfit = watched.takeProfit;
+    if (
+      entry == null ||
+      stop == null ||
+      takeProfit == null ||
+      (watched.sizeMode === "units" ? !watched.units : !watched.notional)
+    ) {
       return null;
     }
     return calculatePnl({
@@ -252,9 +257,9 @@ export function PnlCalculator() {
       sizeMode: watched.sizeMode as SizeMode,
       units: watched.units,
       notional: watched.notional,
-      entry: watched.entry,
-      stop: watched.stop,
-      takeProfit: watched.takeProfit,
+      entry,
+      stop,
+      takeProfit,
       feeFlat: watched.feeFlat ?? 0,
       feePercent: watched.feePercent ?? 0,
     });
@@ -289,7 +294,11 @@ export function PnlCalculator() {
     if (!summary?.riskPerUnit) {
       return null;
     }
-    if (!watched.accountBalance || watched.riskPercent === undefined) {
+    if (
+      !watched.accountBalance ||
+      watched.riskPercent === undefined ||
+      watched.entry == null
+    ) {
       return null;
     }
     const riskAmount = (watched.accountBalance * watched.riskPercent) / 100;

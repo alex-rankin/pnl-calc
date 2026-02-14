@@ -1,9 +1,6 @@
+import type { ReactNode } from "react";
 import { FreeMode, Scrollbar } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import type { ReactNode } from "react";
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/scrollbar";
 
 interface TickerCarouselProps {
   /** Slides: id used for React key, node is the slide content */
