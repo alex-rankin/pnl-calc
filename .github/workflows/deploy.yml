@@ -85,9 +85,7 @@ jobs:
 
             echo "=== RESTART APPLICATION ==="
             pm2 reload watchtower --update-env 2>/dev/null || \
-            pm2 start yarn --name watchtower -- start \
-              --cwd "$DEPLOY_PATH" \
-              --interpreter bash
+            pm2 start node --name watchtower -- apps/backend/dist/index.js
 
             pm2 save
 
