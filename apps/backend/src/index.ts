@@ -24,9 +24,9 @@ if (isProduction) {
   const distPath = join(__dirname, "../../frontend/dist");
   app.use(express.static(distPath));
 
-  // Serve index.html for all non-API routes (SPA fallback)
-  app.get("*", (req, res) => {
-    // Don't serve index.html for API routes
+  // SPA fallback: serve index.html for GET requests that aren't API or static
+  app.use((req, res, next) => {
+    if (req.method !== "GET" && req.method !== "HEAD") return next();
     if (req.path.startsWith("/api")) {
       res.status(404).json({ error: "Not found" });
       return;
