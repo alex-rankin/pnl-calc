@@ -36,9 +36,14 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
     new Set(feeds.flatMap((f) => f.industries || [])),
   ).sort();
   const allSources = Array.from(new Set(feeds.map((f) => f.name))).sort();
+  const LEANING_ORDER = ["left", "center", "right"] as const;
   const allLeanings = Array.from(
     new Set(feeds.map((f) => f.leaning).filter(Boolean)),
-  ).sort() as string[];
+  ).sort(
+    (a, b) =>
+      LEANING_ORDER.indexOf(a as (typeof LEANING_ORDER)[number]) -
+      LEANING_ORDER.indexOf(b as (typeof LEANING_ORDER)[number]),
+  ) as string[];
 
   const updateFilter = <K extends keyof NewsFilters>(
     key: K,
@@ -85,16 +90,27 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
         <Separator />
 
         <div className="space-y-2">
-          <Label>Date Range</Label>
+          <Label>Time Range</Label>
           <div className="flex flex-wrap gap-2">
-            {(["24h", "7d", "30d", "all"] as const).map((range) => (
+            {(
+              [
+                ["5m", "5m"],
+                ["15m", "15m"],
+                ["30m", "30m"],
+                ["45m", "45m"],
+                ["1h", "1h"],
+                ["24h", "24h"],
+                ["7d", "7d"],
+                ["30d", "30d"],
+              ] as const
+            ).map(([range, label]) => (
               <Button
                 key={range}
                 variant={filters.dateRange === range ? "default" : "outline"}
                 size="sm"
                 onClick={() => updateFilter("dateRange", range)}
               >
-                {range === "all" ? "All Time" : range.toUpperCase()}
+                {label}
               </Button>
             ))}
           </div>
@@ -240,10 +256,7 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
                 key={leaning}
                 variant={
                   filters.leanings?.includes(
-                    leaning as
-                      | "left"
-                      | "center"
-                      | "right"
+                    leaning as "left" | "center" | "right",
                   )
                     ? "default"
                     : "outline"
@@ -282,7 +295,7 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
         {(filters.industries?.length ||
           filters.sources?.length ||
           filters.leanings?.length ||
-          filters.dateRange !== "all" ||
+          filters.dateRange !== "24h" ||
           filters.searchQuery) && (
           <>
             <Separator />
@@ -293,7 +306,7 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
                 setSearchQuery("");
                 onFiltersChange({
                   searchQuery: undefined,
-                  dateRange: "all",
+                  dateRange: "24h",
                   industries: undefined,
                   sources: undefined,
                   leanings: undefined,

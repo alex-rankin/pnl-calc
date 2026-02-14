@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { feeds } from "../feeds";
-import { useFilteredNews } from "../queries";
+import { getFeedForArticle, useFilteredNews } from "../queries";
 import type { NewsFilters } from "../types";
 import { NewsItem } from "./NewsItem";
 
@@ -17,7 +17,7 @@ export function NewsList({ filters }: NewsListProps) {
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
+        <div className="space-y-4">
         {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={`skeleton-${i}`} className="h-32 w-full" />
         ))}
@@ -75,7 +75,7 @@ export function NewsList({ filters }: NewsListProps) {
       <ScrollArea className="flex-1 overflow-auto">
         <div className="space-y-4 pr-4">
           {articles.map((article) => {
-            const feed = feeds.find((f) => f.url === article.sourceUrl);
+            const feed = getFeedForArticle(article, feeds);
             return (
               <NewsItem
                 key={article.guid || article.url}

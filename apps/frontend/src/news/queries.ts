@@ -11,7 +11,25 @@ import {
 } from "./utils";
 
 const STALE_TIME = 5 * 60 * 1000; // 5 minutes
-const CACHE_KEY = "news.cache.v1";
+const CACHE_KEY = "news.cache.v2"; // Bumped so old cache (wrong sourceUrl) is discarded
+
+/** Normalize URL for matching (strip trailing slash, handle redirects) */
+function normalizeFeedUrl(url: string): string {
+  try {
+    const u = url.trim();
+    return u.endsWith("/") ? u.slice(0, -1) : u;
+  } catch {
+    return url;
+  }
+}
+
+export function getFeedForArticle(
+  article: NewsArticle,
+  feedList: typeof feeds,
+): (typeof feeds)[number] | undefined {
+  const articleUrl = normalizeFeedUrl(article.sourceUrl);
+  return feedList.find((f) => normalizeFeedUrl(f.url) === articleUrl);
+}
 
 /**
  * Load cached articles from localStorage
@@ -104,7 +122,9 @@ export function useAllNews() {
 
   // Create a refetch function that refetches all queries
   const refetch = () => {
-    queries.forEach((query) => query.refetch());
+    for (const query of queries) {
+      query.refetch();
+    }
   };
 
   return {
@@ -127,8 +147,8 @@ export function useFilteredNews(filters: NewsFilters) {
     let result = [...articles];
 
     // Date range filter
-    if (filters.dateRange && filters.dateRange !== "all") {
-      const dateRange = filters.dateRange;
+    const dateRange = filters.dateRange;
+    if (dateRange) {
       result = result.filter((article) =>
         isWithinDateRange(article, dateRange),
       );
@@ -138,7 +158,7 @@ export function useFilteredNews(filters: NewsFilters) {
     if (filters.industries && filters.industries.length > 0) {
       const industries = filters.industries;
       result = result.filter((article) => {
-        const feed = feeds.find((f) => f.url === article.sourceUrl);
+        const feed = getFeedForArticle(article, feeds);
         return (
           feed?.industries?.some((ind) => industries.includes(ind)) ?? false
         );
@@ -149,8 +169,8 @@ export function useFilteredNews(filters: NewsFilters) {
     if (filters.sources && filters.sources.length > 0) {
       const sources = filters.sources;
       result = result.filter((article) => {
-        const feed = feeds.find((f) => f.url === article.sourceUrl);
-        return feed && sources.includes(feed.name);
+        const feed = getFeedForArticle(article, feeds);
+        return feed != null && sources.includes(feed.name);
       });
     }
 
@@ -158,8 +178,8 @@ export function useFilteredNews(filters: NewsFilters) {
     if (filters.leanings && filters.leanings.length > 0) {
       const leanings = filters.leanings;
       result = result.filter((article) => {
-        const feed = feeds.find((f) => f.url === article.sourceUrl);
-        return feed?.leaning && leanings.includes(feed.leaning);
+        const feed = getFeedForArticle(article, feeds);
+        return feed?.leaning != null && leanings.includes(feed.leaning);
       });
     }
 

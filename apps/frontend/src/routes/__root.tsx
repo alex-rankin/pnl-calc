@@ -11,18 +11,21 @@ export const Route = createRootRoute({
   component: RootComponent,
 });
 
+const PATH_TO_TAB: Record<string, string> = {
+  "/": "dashboard",
+  "/news": "news",
+  "/pnl": "pnl",
+};
+
 function RootComponent() {
   const location = useLocation();
-  const currentPath = location.pathname;
+  const activeTab = PATH_TO_TAB[location.pathname] ?? "dashboard";
 
   return (
     <div className="min-h-screen bg-background">
       <nav className="border-b border-border/70 bg-card">
         <div className="container mx-auto px-4 py-3">
-          <Tabs
-            value={currentPath === "/" ? "dashboard" : "news"}
-            className="w-auto"
-          >
+          <Tabs value={activeTab} className="w-auto">
             <TabsList>
               <TabsTrigger value="dashboard" asChild>
                 <Link
@@ -38,6 +41,14 @@ function RootComponent() {
                   className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                 >
                   News
+                </Link>
+              </TabsTrigger>
+              <TabsTrigger value="pnl" asChild>
+                <Link
+                  to="/pnl"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
+                  PNL
                 </Link>
               </TabsTrigger>
             </TabsList>

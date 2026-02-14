@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { feeds } from "../feeds";
-import { useAllNews } from "../queries";
+import { getFeedForArticle, useAllNews } from "../queries";
 import { NewsItem } from "./NewsItem";
 
 export function NewsTapeWidget() {
@@ -36,10 +36,10 @@ export function NewsTapeWidget() {
             No news available. Check back later.
           </p>
         ) : (
-          <ScrollArea className="h-[400px]">
+          <ScrollArea className="h-[68vh]">
             <div className="space-y-3 pr-4">
               {latestArticles.map((article) => {
-                const feed = feeds.find((f) => f.url === article.sourceUrl);
+                const feed = getFeedForArticle(article, feeds);
                 return (
                   <NewsItem
                     key={article.guid || article.url}

@@ -67,7 +67,7 @@ export async function parseFeed(feedUrl: string): Promise<FeedResponse> {
   const feed = await parser.parseURL(feedUrl);
 
   const articles = feed.items.map((item) =>
-    normalizeArticle(item, feed.title || "Unknown Feed", feed.link, feedUrl),
+    normalizeArticle(item, feed.title || "Unknown Feed", feedUrl),
   );
 
   return {

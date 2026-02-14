@@ -29,6 +29,13 @@
     }
   },
   "files": {
-    "includes": ["**/*.ts", "**/*.js", "!**/dist", "!**/node_modules"]
+    "includes": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.js",
+      "**/*.jsx",
+      "!**/dist",
+      "!**/node_modules"
+    ]
   }
 }

@@ -20,11 +20,13 @@ export interface NewsArticle {
   sourceUrl: string;
 }
 
+export type DateRange = "5m" | "15m" | "30m" | "45m" | "1h" | "24h" | "7d" | "30d";
+
 export interface NewsFilters {
   industries?: string[];
   sources?: string[];
   leanings?: Leaning[];
-  dateRange?: "24h" | "7d" | "30d" | "all";
+  dateRange?: DateRange;
   searchQuery?: string;
   sortBy?: "newest" | "source";
 }

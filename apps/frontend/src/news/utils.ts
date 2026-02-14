@@ -1,4 +1,4 @@
-import type { NewsArticle } from "./types";
+import type { DateRange, NewsArticle } from "./types";
 
 /**
  * Generate a canonical hash for deduplication
@@ -52,28 +52,29 @@ export function formatRelativeTime(dateString: string): string {
   return date.toLocaleDateString();
 }
 
+const DATE_RANGE_MS: Record<string, number> = {
+  "5m": 5 * 60 * 1000,
+  "15m": 15 * 60 * 1000,
+  "30m": 30 * 60 * 1000,
+  "45m": 45 * 60 * 1000,
+  "1h": 60 * 60 * 1000,
+  "24h": 24 * 60 * 60 * 1000,
+  "7d": 7 * 24 * 60 * 60 * 1000,
+  "30d": 30 * 24 * 60 * 60 * 1000,
+};
+
 /**
  * Check if article is within date range
  */
 export function isWithinDateRange(
   article: NewsArticle,
-  range: "24h" | "7d" | "30d" | "all",
+  range: DateRange,
 ): boolean {
-  if (range === "all") {
-    return true;
-  }
-
   const articleDate = new Date(article.publishedAt);
   const now = new Date();
   const diffMs = now.getTime() - articleDate.getTime();
-
-  const ranges = {
-    "24h": 24 * 60 * 60 * 1000,
-    "7d": 7 * 24 * 60 * 60 * 1000,
-    "30d": 30 * 24 * 60 * 60 * 1000,
-  };
-
-  return diffMs <= ranges[range];
+  const maxMs = DATE_RANGE_MS[range];
+  return typeof maxMs === "number" && diffMs <= maxMs;
 }
 
 /**
