@@ -8,7 +8,7 @@ export const Route = createFileRoute("/")({
 
 function DashboardPage() {
   return (
-    <div className="container mx-auto max-w-6xl space-y-8 px-4 py-10">
+    <div className="container mx-auto space-y-8 px-4 py-10">
       <MajorsWidget />
       <NewsTapeWidget />
     </div>

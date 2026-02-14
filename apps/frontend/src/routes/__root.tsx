@@ -5,6 +5,7 @@ import {
   useLocation,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { Logo } from "@/components/Logo";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const Route = createRootRoute({
@@ -24,7 +25,8 @@ function RootComponent() {
   return (
     <div className="min-h-screen bg-background">
       <nav className="border-b border-border/70 bg-card">
-        <div className="container mx-auto px-4 py-3">
+        <div className="container mx-auto flex flex-wrap items-center gap-6 px-4 py-3">
+          <Logo />
           <Tabs value={activeTab} className="w-auto">
             <TabsList>
               <TabsTrigger value="dashboard" asChild>
