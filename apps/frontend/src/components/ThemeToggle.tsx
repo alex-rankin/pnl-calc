@@ -20,9 +20,27 @@ function subscribe(callback: () => void) {
 }
 
 function applyTheme(theme: Theme) {
-  document.documentElement.classList.remove("light", "dark");
-  document.documentElement.classList.add(theme);
+  const root = document.documentElement;
+  const style = document.createElement("style");
+  style.appendChild(
+    document.createTextNode(
+      `*,*::before,*::after{transition:none!important;animation:none!important;}`,
+    ),
+  );
+  document.head.appendChild(style);
+
+  root.classList.toggle("light", theme === "light");
+  root.classList.toggle("dark", theme === "dark");
+  root.style.colorScheme = theme;
   localStorage.setItem(THEME_KEY, theme);
+
+  // Flush and restore transitions after the new theme paints.
+  window.getComputedStyle(style).opacity;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      style.remove();
+    });
+  });
 }
 
 export function ThemeToggle() {
